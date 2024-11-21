@@ -1,5 +1,7 @@
 package com.lab1.model;
 
+import lombok.Data;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,6 +10,7 @@ import java.util.Map;
 /**
  * 是HTML文档类
  */
+@Data
 public class HTML {
     //根节点
     private HTMLTag root;
@@ -40,7 +43,7 @@ public class HTML {
                 newTag = new HTMLLeafTag(tagName, idValue, textContent, null, false);
             } else {
                 //新加的是枝干
-                newTag = new HTMLCompositeTag(tagName, idValue, textContent, null, null, false);
+                newTag = new HTMLCompositeTag(tagName, idValue, textContent, null, null,null, false);
             }
             //真正的插入
             insertLocationTag.addUpdate(newTag);
@@ -78,7 +81,7 @@ public class HTML {
                 newTag = new HTMLLeafTag(tagName, idValue, textContent, parentTag, false);
             } else {
                 //composite
-                newTag = new HTMLCompositeTag(tagName, idValue, textContent, parentTag, null, false);
+                newTag = new HTMLCompositeTag(tagName, idValue, textContent, parentTag, null,null, false);
             }
             map.put(idValue, newTag);
             HTMLCompositeTag parentCompositeTag = (HTMLCompositeTag) parentTag;
@@ -154,12 +157,12 @@ public class HTML {
      */
     public void printIndent(int indent){
         //根据this.root进行打印
-        printer=new IndentPrinter(indent);
-        if(root==null){
-            System.out.println("EMPTY HTML,PLEASE READ OR INIT");
-        }else{
-            System.out.println(printer.format(root));
-        }
+//        printer=new IndentPrinter(indent);
+//        if(root==null){
+//            System.out.println("EMPTY HTML,PLEASE READ OR INIT");
+//        }else{
+//            System.out.println(printer.format(root));
+//        }
     }
 
 
