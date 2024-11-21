@@ -41,6 +41,8 @@ public class HTMLLeafTag implements HTMLTag {
     }
 
 
+
+
     @Override
     public String print(String indent, boolean isLastChild, boolean isRoot) {
         StringBuilder result = new StringBuilder();
@@ -83,7 +85,6 @@ public class HTMLLeafTag implements HTMLTag {
 
     @Override
     public void deleteUpdate() {
-        //父节点删除
         if(this.parent instanceof HTMLCompositeTag){
             HTMLCompositeTag parentTag=(HTMLCompositeTag) this.parent;
             parentTag.removeChild(this);

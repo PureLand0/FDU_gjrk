@@ -27,6 +27,18 @@ public class HTMLCompositeTag implements HTMLTag {
 
     private boolean isDeleted;
 
+    public HTMLCompositeTag(String name, String id, String text, HTMLTag parent, List<HTMLTag> children, boolean isDeleted) {
+        this.name = name;
+        this.id = id;
+        this.text = text;
+        this.parent = parent;
+        if(children == null) {
+            this.children = new ArrayList<>();
+        }
+
+        this.isDeleted = isDeleted;
+    }
+
     public void setDeleted(boolean bool) {
         this.isDeleted = bool;
     }
@@ -36,6 +48,9 @@ public class HTMLCompositeTag implements HTMLTag {
     }
 
     public void addChild(HTMLTag child) {
+        if(this.children == null) {
+            this.children = new ArrayList<>();
+        }
         this.children.add(child);
     }
 

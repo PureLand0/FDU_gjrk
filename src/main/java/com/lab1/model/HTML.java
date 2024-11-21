@@ -1,5 +1,7 @@
 package com.lab1.model;
 
+import com.lab1.print.SimpleTreeViewer;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,8 +14,13 @@ public class HTML {
     //根节点
     private HTMLTag root;
     // Map存储id-Tag 用于查找
-    private Map<String, HTMLTag> map = new HashMap<>();
-//    private Printer<HTMLTag> printer;
+    private Map<String, HTMLTag> map;
+
+
+    public HTML(HTMLTag root) {
+        this.root = root;
+        map = new HashMap<>();
+    }
 
     /**
      * 1. insert 在某元素之前插入新元素
@@ -133,6 +140,7 @@ public class HTML {
 
     /**
      * 5. delete 删除某元素
+     * TODO 1
      *
      * @param element 为要删除元素的 id
      */
@@ -153,13 +161,11 @@ public class HTML {
      * @param indent 为可选参数，表示每级缩进的空格数，默认为 2。当提供 indent 时，使用指定的空格数进行缩进显示
      */
     public void printIndent(int indent){
-        //根据this.root进行打印
-        printer=new IndentPrinter(indent);
+        SimpleTreeViewer simpleTreeViewer = new SimpleTreeViewer(root,indent);
         if(root==null){
-            System.out.println("EMPTY HTML,PLEASE READ OR INIT");
-        }else{
-            System.out.println(printer.format(root));
+            throw new RuntimeException("当前html为空");
         }
+        System.out.println(new String(simpleTreeViewer.show()));
     }
 
 
