@@ -1,6 +1,7 @@
 package com.lab1.model;
 
 import com.lab1.print.SimpleTreeViewer;
+import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,6 +11,7 @@ import java.util.Map;
 /**
  * 是HTML文档类
  */
+@Data
 public class HTML {
     //根节点
     private HTMLTag root;
@@ -21,6 +23,10 @@ public class HTML {
         this.root = root;
         map = new HashMap<>();
     }
+    public HTML( ) {
+
+    }
+
 
     /**
      * 1. insert 在某元素之前插入新元素
@@ -47,7 +53,7 @@ public class HTML {
                 newTag = new HTMLLeafTag(tagName, idValue, textContent, null, false);
             } else {
                 //新加的是枝干
-                newTag = new HTMLCompositeTag(tagName, idValue, textContent, null, null, false);
+                newTag = new HTMLCompositeTag(tagName, idValue, textContent, null, null,null, false);
             }
             //真正的插入
             insertLocationTag.addUpdate(newTag);
@@ -85,7 +91,7 @@ public class HTML {
                 newTag = new HTMLLeafTag(tagName, idValue, textContent, parentTag, false);
             } else {
                 //composite
-                newTag = new HTMLCompositeTag(tagName, idValue, textContent, parentTag, null, false);
+                newTag = new HTMLCompositeTag(tagName, idValue, textContent, parentTag, null,null, false);
             }
             map.put(idValue, newTag);
             HTMLCompositeTag parentCompositeTag = (HTMLCompositeTag) parentTag;
@@ -161,11 +167,26 @@ public class HTML {
      * @param indent 为可选参数，表示每级缩进的空格数，默认为 2。当提供 indent 时，使用指定的空格数进行缩进显示
      */
     public void printIndent(int indent){
-        SimpleTreeViewer simpleTreeViewer = new SimpleTreeViewer(root,indent);
         if(root==null){
             throw new RuntimeException("当前html为空");
         }
+        SimpleTreeViewer simpleTreeViewer = new SimpleTreeViewer(root,indent);
         System.out.println(new String(simpleTreeViewer.show()));
+    }
+
+    /**
+     * 7.print-tree 按树型格式显示
+     */
+    public void printTree(){
+        if(root==null){
+            throw new RuntimeException("当前html为空");
+        }
+        printer=new TreePrinter();
+        if(root==null){
+            System.out.println("EMPTY HTML,PLEASE READ OR INIT");
+        }else{
+            System.out.println(printer.format(root));
+        }
     }
 
 

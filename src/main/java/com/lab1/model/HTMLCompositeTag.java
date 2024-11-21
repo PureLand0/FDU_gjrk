@@ -23,6 +23,9 @@ public class HTMLCompositeTag implements HTMLTag {
 
     private HTMLTag parent;
 
+
+    private List<String> childrenId = new ArrayList<>();
+
     private List<HTMLTag> children = new ArrayList<>();
 
     private boolean isDeleted;
@@ -60,6 +63,13 @@ public class HTMLCompositeTag implements HTMLTag {
 
     public void removeChild(HTMLTag child){
         this.children.remove(child);
+    }
+
+
+    public HTMLCompositeTag(String name,String id, String text) {
+        this.name=name;
+        this.id=id;
+        this.text=text;
     }
 
     @Override

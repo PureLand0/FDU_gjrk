@@ -30,6 +30,8 @@ public class HTMLLeafTag implements HTMLTag {
     /**
      * 是否删除的标签值
      */
+
+
     private boolean isDeleted;
 
     public void setDeleted(boolean bool) {
@@ -40,6 +42,12 @@ public class HTMLLeafTag implements HTMLTag {
         return this.isDeleted;
     }
 
+    public HTMLLeafTag(String name,String id, String text) {
+        this.name=name;
+        this.id=id;
+        this.text=text;
+
+    }
 
 
 
