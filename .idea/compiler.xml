@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="gjrk_lab1" />
+        <module name="FDU_gjrk" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="17" />
