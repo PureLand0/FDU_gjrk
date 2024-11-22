@@ -3,12 +3,12 @@ package com.lab1;
 import com.lab1.model.HTML;
 import com.lab1.model.HTMLCompositeTag;
 import com.lab1.model.HTMLLeafTag;
+import com.lab1.util.HTMLParser;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
 public class Testa {
-
     @Test
     public void test1() {
         HTMLCompositeTag html = new HTMLCompositeTag("html", "html", "", null, null, false);
@@ -36,17 +36,20 @@ public class Testa {
         list.addChild(i3);
 
         HTML html1 = new HTML(html);
-
-
-        html1.printTree();
-
-
-
+        html1.save("E:\\Desktop");
 
     }
 
     @Test
     public void checkspell() throws IOException {
         new HTML().spellCheck();
+    }
+
+    @Test
+    public void testInit() throws IOException {
+//        HTML html = new HTML();
+//        html.read("E:\\FDU\\gjrk_lab1\\src\\main\\resources\\TestTemplate.html");
+        HTML html= HTMLParser.parseHTML("src\\main\\resources\\HTMLTemplate.html");
+        html.printTree();
     }
 }

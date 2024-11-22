@@ -6,18 +6,19 @@ import com.lab1.print.Viewer;
 import com.lab1.util.HTMLParser;
 import lombok.Data;
 import org.languagetool.JLanguageTool;
-import org.languagetool.Language;
 import org.languagetool.Languages;
-import org.languagetool.language.BritishEnglish;
-import org.languagetool.Languages;
-import org.languagetool.markup.AnnotatedText;
-import org.languagetool.markup.AnnotatedTextBuilder;
 import org.languagetool.rules.RuleMatch;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * 是HTML文档类
@@ -37,7 +38,6 @@ public class HTML {
     }
 
     public HTML() {
-
     }
 
 
@@ -184,16 +184,16 @@ public class HTML {
         if (root == null) {
             throw new RuntimeException("当前html为空");
         }
-        Viewer indentViewer = new IndentViewer(root, indent);
-        System.out.println(new String(indentViewer.show()));
+        viewer = new IndentViewer(root, indent);
+        System.out.println(new String(viewer.show()));
     }
 
     public void printIndent() {
         if (root == null) {
             throw new RuntimeException("当前html为空");
         }
-        Viewer indentViewer = new IndentViewer(root, 2);
-        System.out.println(new String(indentViewer.show()));
+        viewer = new IndentViewer(root, 2);
+        System.out.println(new String(viewer.show()));
     }
 
     /**
@@ -203,8 +203,8 @@ public class HTML {
         if (root == null) {
             throw new RuntimeException("当前html为空");
         }
-        Viewer treeViewer = new TreeViewer(root);
-        System.out.println(new String(treeViewer.show()));
+        viewer = new TreeViewer(root);
+        System.out.println(new String(viewer.show()));
     }
 
     /**
@@ -213,26 +213,28 @@ public class HTML {
      * - 需要能够检查 HTML 中的所有 text 内容。
      */
     public void spellCheck() throws IOException {
-        // 假设这是你的HTML内容
-        String htmlContent = "<html>\n" +
-                "  <head>\n" +
-                "    <title>My Webpage</title>\n" +
-                "  </head>\n" +
-                "  <body>\n" +
-                "    <h1 id=\"title\">Welcome to my webpage</h1>\n" +
-                "    <p id=\"description\">This is a paragraph.</p >\n" +
-                "    <ul id=\"list\">\n" +
-                "      <li id=\"item1\">Item 1</li>\n" +
-                "      <li id=\"item2\">Item 2</li>\n" +
-                "      <li id=\"item3\">Item 3</li>\n" +
-                "    </ul>\n" +
-                "    <div id=\"footer\">\n" +
-                "      this is a text contect in div\n" +
-                "      <p id=\"last-updated\">Last updated: 2024-01-01</p >\n" +
-                "      <p id=\"copyright\">Copyright © 2021 MyWebpage.com</p >\n" +
-                "    </div>\n" +
-                "  </body>\n" +
-                "</html>";
+        // 这是HTML内容
+        viewer = new IndentViewer(root, 2);
+        String htmlContent = new String(viewer.show());
+//        String htmlContent = "<html>\n" +
+//                "  <head>\n" +
+//                "    <title>My Webpage</title>\n" +
+//                "  </head>\n" +
+//                "  <body>\n" +
+//                "    <h1 id=\"title\">Welcome to my webpage</h1>\n" +
+//                "    <p id=\"description\">This is a paragraph.</p >\n" +
+//                "    <ul id=\"list\">\n" +
+//                "      <li id=\"item1\">Item 1</li>\n" +
+//                "      <li id=\"item2\">Item 2</li>\n" +
+//                "      <li id=\"item3\">Item 3</li>\n" +
+//                "    </ul>\n" +
+//                "    <div id=\"footer\">\n" +
+//                "      this is a text contect in div\n" +
+//                "      <p id=\"last-updated\">Last updated: 2024-01-01</p >\n" +
+//                "      <p id=\"copyright\">Copyright © 2021 MyWebpage.com</p >\n" +
+//                "    </div>\n" +
+//                "  </body>\n" +
+//                "</html>";
         // 正则表达式匹配纯文本内容
         String text = htmlContent.replaceAll("<[^>]+>", "").replaceAll("(\\r?\\n\\s*){2,}", " ").trim();
         JLanguageTool langTool = new JLanguageTool(Languages.getLanguageForShortCode("en-GB"));
@@ -252,21 +254,59 @@ public class HTML {
      * - filepath 为读取文件的路径名。
      * - 进行必要的异常检测，例如读取的文件不存在
      */
-//    public void read(String filePath) {
-//        String html = "";
-//        try {
-//            html = HTMLParser.readHTMLFile(filePath);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        try {
-//            HTML parseredDoc = HTMLParser.parseHTML(html);
-//            this.root = parseredDoc.getRoot();
-//            this.map = parseredDoc.getId2Tag();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
+    public void read(String filePath) {
+        try {
+            HTML html = HTMLParser.parseHTML(filePath);
+            this.root = html.getRoot();
+            this.map = html.getMap();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * 10. save 写入 HTML 文件
+     * - filepath 为写入文件的路径名。
+     * - 进行必要的异常检测，例如提供的路径名无法写入文件。
+     */
+    public void save(String filePath) {
+        if (this.root == null) {
+            System.out.println("没有HTML");
+        }
+        // 创建一个 UUID 作为文件名
+        String fileName = UUID.randomUUID().toString() + ".html";
+        // 拼接完整的文件路径
+        String fullPath = Paths.get(filePath, fileName).toString();
+        viewer = new IndentViewer(root);
+        String res = new String(viewer.show());
+        // 写入文件
+        try {
+            // 确保目录存在
+            Path path = Paths.get(filePath);
+            if (!Files.exists(path)) {
+                Files.createDirectories(path); // 创建目录
+            }
+            // 使用 BufferedWriter 写入文件
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(fullPath))) {
+                bw.write(res);
+            }
+            System.out.println("文件已保存至: " + fullPath); // 输出保存的文件路径
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    /**
+     * 11. 初始化编辑器
+     */
+    public void init() {
+        try{
+//            read("../../../resources/HTMLTemplate.html");
+            read("E:\\FDU\\gjrk_lab1\\src\\main\\resources\\HTMLTemplate.html");
+
+        }catch (Exception e) {
+
+        }
+    }
 
 
     /**

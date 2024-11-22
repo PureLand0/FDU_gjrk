@@ -1,6 +1,7 @@
-package com.lab1.command;
+package com.lab1.command.io;
 
 
+import com.lab1.command.Command;
 import com.lab1.model.HTML;
 import lombok.AllArgsConstructor;
 import lombok.Data;
