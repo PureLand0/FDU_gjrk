@@ -1,9 +1,19 @@
 package com.lab1.model;
 
-import com.lab1.print.SimpleTreeViewer;
+import com.lab1.print.IndentViewer;
+import com.lab1.print.TreeViewer;
+import com.lab1.print.Viewer;
+import com.lab1.util.HTMLParser;
 import lombok.Data;
+import org.languagetool.JLanguageTool;
+import org.languagetool.Language;
+import org.languagetool.Languages;
+import org.languagetool.language.BritishEnglish;
+import org.languagetool.markup.AnnotatedText;
+import org.languagetool.markup.AnnotatedTextBuilder;
+import org.languagetool.rules.RuleMatch;
 
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,13 +27,15 @@ public class HTML {
     private HTMLTag root;
     // Map存储id-Tag 用于查找
     private Map<String, HTMLTag> map;
+    private Viewer viewer;
 
 
     public HTML(HTMLTag root) {
         this.root = root;
         map = new HashMap<>();
     }
-    public HTML( ) {
+
+    public HTML() {
 
     }
 
@@ -53,7 +65,7 @@ public class HTML {
                 newTag = new HTMLLeafTag(tagName, idValue, textContent, null, false);
             } else {
                 //新加的是枝干
-                newTag = new HTMLCompositeTag(tagName, idValue, textContent, null, null,null, false);
+                newTag = new HTMLCompositeTag(tagName, idValue, textContent, null, null, null, false);
             }
             //真正的插入
             insertLocationTag.addUpdate(newTag);
@@ -91,7 +103,7 @@ public class HTML {
                 newTag = new HTMLLeafTag(tagName, idValue, textContent, parentTag, false);
             } else {
                 //composite
-                newTag = new HTMLCompositeTag(tagName, idValue, textContent, parentTag, null,null, false);
+                newTag = new HTMLCompositeTag(tagName, idValue, textContent, parentTag, null, null, false);
             }
             map.put(idValue, newTag);
             HTMLCompositeTag parentCompositeTag = (HTMLCompositeTag) parentTag;
@@ -164,30 +176,91 @@ public class HTML {
 
     /**
      * 6. print-indent 按缩进格式显示
+     *
      * @param indent 为可选参数，表示每级缩进的空格数，默认为 2。当提供 indent 时，使用指定的空格数进行缩进显示
      */
-    public void printIndent(int indent){
-        if(root==null){
+    public void printIndent(int indent) {
+        if (root == null) {
             throw new RuntimeException("当前html为空");
         }
-        SimpleTreeViewer simpleTreeViewer = new SimpleTreeViewer(root,indent);
-        System.out.println(new String(simpleTreeViewer.show()));
+        Viewer indentViewer = new IndentViewer(root, indent);
+        System.out.println(new String(indentViewer.show()));
+    }
+
+    public void printIndent() {
+        if (root == null) {
+            throw new RuntimeException("当前html为空");
+        }
+        Viewer indentViewer = new IndentViewer(root, 2);
+        System.out.println(new String(indentViewer.show()));
     }
 
     /**
      * 7.print-tree 按树型格式显示
      */
-    public void printTree(){
-        if(root==null){
+    public void printTree() {
+        if (root == null) {
             throw new RuntimeException("当前html为空");
         }
-        printer=new TreePrinter();
-        if(root==null){
-            System.out.println("EMPTY HTML,PLEASE READ OR INIT");
-        }else{
-            System.out.println(printer.format(root));
+        Viewer treeViewer = new TreeViewer(root);
+        System.out.println(new String(treeViewer.show()));
+    }
+
+    /**
+     * 8. spell-check 显示拼写检查结果
+     * - 调用拼写检查服务，显示拼写检查结果。检查结果的格式自定，合理即可。
+     * - 需要能够检查 HTML 中的所有 text 内容。
+     */
+    public void spellCheck() throws IOException {
+        // 假设这是你的HTML内容
+        String htmlContent = "<html><body><p>This is aa <b>test</b> text.</p></body></html>";
+        // 使用AnnotatedTextBuilder来构建AnnotatedText对象
+        AnnotatedTextBuilder textBuilder = new AnnotatedTextBuilder();
+        for (String token : htmlContent.split("<|>")) { // 简单的分割HTML标签和文本
+            if (token.startsWith("/") || token.startsWith("<")) {
+                // 如果是HTML标签，则添加为markup
+                textBuilder.addMarkup(token);
+            } else if (!token.trim().isEmpty()) {
+                // 如果是文本内容，则添加为text
+                textBuilder.addText(token);
+            }
+        }
+        // 构建AnnotatedText对象
+        AnnotatedText annotatedText = textBuilder.build();
+        // 创建LanguageTool实例
+        JLanguageTool langTool = new JLanguageTool(Languages.getLanguageForShortCode("en-GB"));
+        // 检查文本
+        List<RuleMatch> matches = langTool.check(annotatedText);
+        // 输出检查结果
+        for (RuleMatch match : matches) {
+            System.out.println("Potential error at characters " +
+                    match.getFromPos() + "-" + match.getToPos() + ": " +
+                    match.getMessage());
+            System.out.println("Suggested correction(s): " +
+                    match.getSuggestedReplacements());
         }
     }
+
+    /**
+     * 9. read 读入 HTML 文件
+     * - filepath 为读取文件的路径名。
+     * - 进行必要的异常检测，例如读取的文件不存在
+     */
+//    public void read(String filePath) {
+//        String html = "";
+//        try {
+//            html = HTMLParser.readHTMLFile(filePath);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        try {
+//            HTML parseredDoc = HTMLParser.parseHTML(html);
+//            this.root = parseredDoc.getRoot();
+//            this.map = parseredDoc.getId2Tag();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 
     /**
@@ -200,12 +273,6 @@ public class HTML {
         return map.get(id);
     }
 
-    /**
-     * 添加标签并检查 id 是否重复
-     *
-     * @param tag
-     * @throws IllegalArgumentException
-     */
     public void addTag(HTMLTag tag) throws IllegalArgumentException {
         if (map.containsKey(tag.getId())) {
             throw new IllegalArgumentException("Duplicate id: " + tag.getId());

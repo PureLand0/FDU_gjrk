@@ -5,6 +5,8 @@ import com.lab1.model.HTMLCompositeTag;
 import com.lab1.model.HTMLLeafTag;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+
 public class Testa {
 
     @Test
@@ -36,10 +38,15 @@ public class Testa {
         HTML html1 = new HTML(html);
 
 
-        html1.printIndent(2);
+        html1.printTree();
 
 
 
 
+    }
+
+    @Test
+    public void checkspell() throws IOException {
+        new HTML().spellCheck();
     }
 }
