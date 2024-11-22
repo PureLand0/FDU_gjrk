@@ -1,29 +1,26 @@
 package com.lab1.print;
 
-import com.lab1.model.HTML;
 import com.lab1.model.HTMLCompositeTag;
 import com.lab1.model.HTMLLeafTag;
 import com.lab1.model.HTMLTag;
 
 import java.util.List;
 
-public class SimpleTreeViewer {
+public class IndentViewer implements Viewer{
     private HTMLTag root;
     private int indent;
     private StringBuilder sb;
 
-    public SimpleTreeViewer(HTMLTag root) {
+    public IndentViewer(HTMLTag root) {
         this.root = root;
         this.indent = 2;
         sb = new StringBuilder();
-
     }
 
-    public SimpleTreeViewer(HTMLTag root, int indent) {
+    public IndentViewer(HTMLTag root, int indent) {
         this.root = root;
         this.indent = indent;
         sb = new StringBuilder();
-
     }
 
     private StringBuilder printIdent(int indent) {
@@ -53,17 +50,14 @@ public class SimpleTreeViewer {
                 for (HTMLTag nodetemp : nodes) {
                     show(nodetemp, indent + 1);
                 }
-
             }
-
             sb.append(printIdent(indent));
             sb.append("<").append("/").append(node.getName()).append(">").append("\n");
         }
-
-
     }
 
     // 显示使用空格缩进的树形结构
+    @Override
     public StringBuilder show() {
         HTMLCompositeTag htmlCompositeTag = (HTMLCompositeTag) root;
         sb.append("<").append(root.getName()).append(" id=\"").append(root.getId()).append("\"").append(">").append("\n");

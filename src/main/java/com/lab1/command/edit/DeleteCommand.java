@@ -1,5 +1,6 @@
-package com.lab1.command;
+package com.lab1.command.edit;
 
+import com.lab1.command.CanUndoCommand;
 import com.lab1.model.HTML;
 import com.lab1.model.HTMLTag;
 

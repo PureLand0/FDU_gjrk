@@ -2,6 +2,13 @@ package com.lab1.util;
 
 
 import com.lab1.command.*;
+import com.lab1.command.edit.*;
+import com.lab1.command.io.InitCommand;
+import com.lab1.command.io.ReadCommand;
+import com.lab1.command.io.SaveCommand;
+import com.lab1.command.io.SpellCheckCommand;
+import com.lab1.command.show.PrintIndentCommand;
+import com.lab1.command.show.PrintTreeCommand;
 import com.lab1.model.HTML;
 
 public class CommandParser {
@@ -79,7 +86,7 @@ public class CommandParser {
                 command = new PrintIndentCommand(Integer.parseInt(cmdStrings[1]), receiver);
             } else if (cmdStrings.length == 1) {
                 //每级缩进的空格数，默认为 2
-                command = new PrintIndentCommand(Constant.DEFAULT_INDENT, receiver);
+//                command = new PrintIndentCommand(Constant.DEFAULT_INDENT, receiver);
             }
         } else if ("print-tree".equals(prefix)) {
             //Format: print-tree
