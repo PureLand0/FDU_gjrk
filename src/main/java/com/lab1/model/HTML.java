@@ -2,7 +2,13 @@ package com.lab1.model;
 
 import com.lab1.print.SimpleTreeViewer;
 import lombok.Data;
+import org.languagetool.JLanguageTool;
+import org.languagetool.Languages;
+import org.languagetool.markup.AnnotatedText;
+import org.languagetool.markup.AnnotatedTextBuilder;
+import org.languagetool.rules.RuleMatch;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +29,8 @@ public class HTML {
         this.root = root;
         map = new HashMap<>();
     }
-    public HTML( ) {
+
+    public HTML() {
 
     }
 
@@ -53,7 +60,7 @@ public class HTML {
                 newTag = new HTMLLeafTag(tagName, idValue, textContent, null, false);
             } else {
                 //新加的是枝干
-                newTag = new HTMLCompositeTag(tagName, idValue, textContent, null, null,null, false);
+                newTag = new HTMLCompositeTag(tagName, idValue, textContent, null, null, null, false);
             }
             //真正的插入
             insertLocationTag.addUpdate(newTag);
@@ -91,7 +98,7 @@ public class HTML {
                 newTag = new HTMLLeafTag(tagName, idValue, textContent, parentTag, false);
             } else {
                 //composite
-                newTag = new HTMLCompositeTag(tagName, idValue, textContent, parentTag, null,null, false);
+                newTag = new HTMLCompositeTag(tagName, idValue, textContent, parentTag, null, null, false);
             }
             map.put(idValue, newTag);
             HTMLCompositeTag parentCompositeTag = (HTMLCompositeTag) parentTag;
@@ -164,27 +171,28 @@ public class HTML {
 
     /**
      * 6. print-indent 按缩进格式显示
+     *
      * @param indent 为可选参数，表示每级缩进的空格数，默认为 2。当提供 indent 时，使用指定的空格数进行缩进显示
      */
-    public void printIndent(int indent){
-        if(root==null){
+    public void printIndent(int indent) {
+        if (root == null) {
             throw new RuntimeException("当前html为空");
         }
-        SimpleTreeViewer simpleTreeViewer = new SimpleTreeViewer(root,indent);
+        SimpleTreeViewer simpleTreeViewer = new SimpleTreeViewer(root, indent);
         System.out.println(new String(simpleTreeViewer.show()));
     }
 
     /**
      * 7.print-tree 按树型格式显示
      */
-    public void printTree(){
-        if(root==null){
+    public void printTree() {
+        if (root == null) {
             throw new RuntimeException("当前html为空");
         }
-        printer=new TreePrinter();
-        if(root==null){
+        printer = new TreePrinter();
+        if (root == null) {
             System.out.println("EMPTY HTML,PLEASE READ OR INIT");
-        }else{
+        } else {
             System.out.println(printer.format(root));
         }
     }
@@ -211,6 +219,45 @@ public class HTML {
             throw new IllegalArgumentException("Duplicate id: " + tag.getId());
         }
         map.put(tag.getId(), tag);  // 将标签添加到 map 中
+    }
+
+    /**
+     * 8. spell-check 显示拼写检查结果
+     * - 调用拼写检查服务，显示拼写检查结果。检查结果的格式自定，合理即可。
+     * - 需要能够检查 HTML 中的所有 text 内容。
+     */
+    public void spellCheck() throws IOException {
+        // 假设这是你的HTML内容
+        String htmlContent = "<html>\n" +
+                "  <head>\n" +
+                "    <title>My Webpage</title>\n" +
+                "  </head>\n" +
+                "  <body>\n" +
+                "    <h1 id=\"title\">Welcome to my webpage</h1>\n" +
+                "    <p id=\"description\">This is a paragraph.</p >\n" +
+                "    <ul id=\"list\">\n" +
+                "      <li id=\"item1\">Item 1</li>\n" +
+                "      <li id=\"item2\">Item 2</li>\n" +
+                "      <li id=\"item3\">Item 3</li>\n" +
+                "    </ul>\n" +
+                "    <div id=\"footer\">\n" +
+                "      this is a text contect in div\n" +
+                "      <p id=\"last-updated\">Last updated: 2024-01-01</p >\n" +
+                "      <p id=\"copyright\">Copyright © 2021 MyWebpage.com</p >\n" +
+                "    </div>\n" +
+                "  </body>\n" +
+                "</html>";
+        // 正则表达式匹配纯文本内容
+        String text = htmlContent.replaceAll("<[^>]+>", "").replaceAll("(\\r?\\n\\s*){2,}", " ").trim();
+        JLanguageTool langTool = new JLanguageTool(Languages.getLanguageForShortCode("en-GB"));
+        // 检查文本
+        List<RuleMatch> matches = langTool.check(text);
+        // 输出检查结果
+        for (RuleMatch match : matches) {
+            System.out.println("Possible spell error: " +
+                    text.substring(match.getFromPos(), match.getToPos()) + "->" +
+                    match.getSuggestedReplacements());
+        }
     }
 
 }
