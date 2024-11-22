@@ -9,6 +9,7 @@ import org.languagetool.JLanguageTool;
 import org.languagetool.Language;
 import org.languagetool.Languages;
 import org.languagetool.language.BritishEnglish;
+import org.languagetool.Languages;
 import org.languagetool.markup.AnnotatedText;
 import org.languagetool.markup.AnnotatedTextBuilder;
 import org.languagetool.rules.RuleMatch;
@@ -213,33 +214,38 @@ public class HTML {
      */
     public void spellCheck() throws IOException {
         // 假设这是你的HTML内容
-        String htmlContent = "<html><body><p>This is aa <b>test</b> text.</p></body></html>";
-        // 使用AnnotatedTextBuilder来构建AnnotatedText对象
-        AnnotatedTextBuilder textBuilder = new AnnotatedTextBuilder();
-        for (String token : htmlContent.split("<|>")) { // 简单的分割HTML标签和文本
-            if (token.startsWith("/") || token.startsWith("<")) {
-                // 如果是HTML标签，则添加为markup
-                textBuilder.addMarkup(token);
-            } else if (!token.trim().isEmpty()) {
-                // 如果是文本内容，则添加为text
-                textBuilder.addText(token);
-            }
-        }
-        // 构建AnnotatedText对象
-        AnnotatedText annotatedText = textBuilder.build();
-        // 创建LanguageTool实例
+        String htmlContent = "<html>\n" +
+                "  <head>\n" +
+                "    <title>My Webpage</title>\n" +
+                "  </head>\n" +
+                "  <body>\n" +
+                "    <h1 id=\"title\">Welcome to my webpage</h1>\n" +
+                "    <p id=\"description\">This is a paragraph.</p >\n" +
+                "    <ul id=\"list\">\n" +
+                "      <li id=\"item1\">Item 1</li>\n" +
+                "      <li id=\"item2\">Item 2</li>\n" +
+                "      <li id=\"item3\">Item 3</li>\n" +
+                "    </ul>\n" +
+                "    <div id=\"footer\">\n" +
+                "      this is a text contect in div\n" +
+                "      <p id=\"last-updated\">Last updated: 2024-01-01</p >\n" +
+                "      <p id=\"copyright\">Copyright © 2021 MyWebpage.com</p >\n" +
+                "    </div>\n" +
+                "  </body>\n" +
+                "</html>";
+        // 正则表达式匹配纯文本内容
+        String text = htmlContent.replaceAll("<[^>]+>", "").replaceAll("(\\r?\\n\\s*){2,}", " ").trim();
         JLanguageTool langTool = new JLanguageTool(Languages.getLanguageForShortCode("en-GB"));
         // 检查文本
-        List<RuleMatch> matches = langTool.check(annotatedText);
+        List<RuleMatch> matches = langTool.check(text);
         // 输出检查结果
         for (RuleMatch match : matches) {
-            System.out.println("Potential error at characters " +
-                    match.getFromPos() + "-" + match.getToPos() + ": " +
-                    match.getMessage());
-            System.out.println("Suggested correction(s): " +
+            System.out.println("Possible spell error: " +
+                    text.substring(match.getFromPos(), match.getToPos()) + "->" +
                     match.getSuggestedReplacements());
         }
     }
+
 
     /**
      * 9. read 读入 HTML 文件
@@ -279,5 +285,6 @@ public class HTML {
         }
         map.put(tag.getId(), tag);  // 将标签添加到 map 中
     }
+
 
 }

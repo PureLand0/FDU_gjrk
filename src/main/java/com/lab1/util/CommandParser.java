@@ -1,7 +1,7 @@
 package com.lab1.util;
 
 
-import com.lab1.command.Command;
+import com.lab1.command.*;
 import com.lab1.model.HTML;
 
 public class CommandParser {
@@ -12,7 +12,7 @@ public class CommandParser {
      * InsertCommand, AppendCommand, EditIdCommand, EditTextCommand, DeleteCommand, PrintIndentCommand
      * PrintTreeCommand, SpellCheckCommand, ReadCommand, SaveCommand, InitCommand, UndoCommand, RedoCommand
      */
-    public static Command parse(String cmdStr, HTML receiver) {
+    public static Command parse(String cmdStr, CommandInvoker commandInvoker, HTML receiver) { //TODO: zgn加了CommandInvoker
         Command command = null;
         String[] cmdStrings = cmdStr.split("\\s+");
         String prefix = cmdStrings[0];
@@ -23,10 +23,10 @@ public class CommandParser {
                 for (int i = 4; i < cmdStrings.length; i++) {
                     textContent.append(" ").append(cmdStrings[i]);
                 }
-//                command = new InsertCommand(cmdStrings[1], cmdStrings[2], cmdStrings[3], textContent.toString(), receiver);
+                command = new InsertCommand(cmdStrings[1], cmdStrings[2], cmdStrings[3], textContent.toString(),receiver);
             } else if (cmdStrings.length == 4) {
                 //textContent为空表示空文本
-//                command = new InsertCommand(cmdStrings[1], cmdStrings[2], cmdStrings[3], "", receiver);
+                command = new InsertCommand(cmdStrings[1], cmdStrings[2], cmdStrings[3], "" ,receiver);
             } else {
                 System.out.println("It looks like you are typing <insert> but with uncorrected format");
             }
@@ -37,17 +37,17 @@ public class CommandParser {
                 for (int i = 4; i < cmdStrings.length; i++) {
                     textContent.append(" ").append(cmdStrings[i]);
                 }
-//                command = new AppendCommand(cmdStrings[1], cmdStrings[2], cmdStrings[3], textContent.toString(), receiver);
+                command = new AppendCommand( cmdStrings[3], cmdStrings[1], cmdStrings[2], textContent.toString(),receiver);
             } else if (cmdStrings.length == 4) {
                 //如果可选选项[textContent]为空，则默认为空字符串
-//                command = new AppendCommand(cmdStrings[1], cmdStrings[2], cmdStrings[3], "", receiver);
+                command = new AppendCommand( cmdStrings[3], cmdStrings[1], cmdStrings[2],"",receiver);
             } else {
                 System.out.println("It looks like you are typing <append> but with uncorrected format");
             }
         } else if ("edit-id".equals(prefix)) {
             //Format: edit-id oldId newId
             if (cmdStrings.length == 3) {
-//                command = new EditIdCommand(cmdStrings[1], cmdStrings[2], receiver);
+                command = new EditIdCommand(cmdStrings[1], cmdStrings[2],receiver);
             } else {
                 System.out.println("It looks like you are typing <edit-id> but with uncorrected format");
             }
@@ -58,17 +58,17 @@ public class CommandParser {
                 for (int i = 2; i < cmdStrings.length; i++) {
                     newTextContent.append(" ").append(cmdStrings[i]);
                 }
-//                command = new EditTextCommand(cmdStrings[1], newTextContent.toString(), receiver);
+                command = new EditTextCommand(cmdStrings[1], newTextContent.toString(), receiver);
             } else if (cmdStrings.length == 2) {
                 //如果可选选项[newTextContent]为空，则默认为空字符串
-//                command = new EditTextCommand(cmdStrings[1], "", receiver);
+                command = new EditTextCommand(cmdStrings[1], "", receiver);
             } else {
                 System.out.println("It looks like you are typing <edit-text> but with uncorrected format");
             }
         } else if ("delete".equals(prefix)) {
             //Format: delete element
             if (cmdStrings.length == 2) {
-//                command = new DeleteCommand(cmdStrings[1], receiver);
+                command = new DeleteCommand(cmdStrings[1], receiver);
             } else {
                 System.out.println("It looks like you are typing <delete> but with uncorrected format");
             }
@@ -76,40 +76,40 @@ public class CommandParser {
             //Format: print-indent [indent]
             if (cmdStrings.length == 2) {
                 //当提供 indent 时，使用指定的空格数进行缩进显示。
-//                command = new PrintIndentCommand(Integer.parseInt(cmdStrings[1]), receiver);
+                command = new PrintIndentCommand(Integer.parseInt(cmdStrings[1]), receiver);
             } else if (cmdStrings.length == 1) {
                 //每级缩进的空格数，默认为 2
-//                command = new PrintIndentCommand(Constant.DEFAULT_INDENT, receiver);
+                command = new PrintIndentCommand(Constant.DEFAULT_INDENT, receiver);
             }
         } else if ("print-tree".equals(prefix)) {
             //Format: print-tree
-//            command = new PrintTreeCommand(receiver);
+            command = new PrintTreeCommand(receiver);
         } else if ("spell-check".equals(prefix)) {
             //Format: spell-check
-//            command = new SpellCheckCommand(receiver);
+            command = new SpellCheckCommand(receiver);
         } else if ("read".equals(prefix)) {
             //Format: read filepath
             if (cmdStrings.length == 2) {
-//                command = new ReadCommand(cmdStrings[1], receiver);
+                command = new ReadCommand(cmdStrings[1], receiver);
             } else {
                 System.out.println("It looks like you are typing <read> but with uncorrected format");
             }
         } else if ("save".equals(prefix)) {
             //Format: save filepath
             if (cmdStrings.length == 2) {
-//                command = new SaveCommand(cmdStrings[1], receiver);
+                command = new SaveCommand(cmdStrings[1], receiver);
             } else {
                 System.out.println("It looks like you are typing <save> but with uncorrected format");
             }
         } else if ("init".equals(prefix)) {
             //Format: init
-//            command = new InitCommand(receiver);
+            command = new InitCommand(receiver);
         } else if ("undo".equals(prefix)) {
             //Format: undo
-//            command = new UndoCommand(receiver);
+            command = new UndoCommand(commandInvoker);
         } else if ("redo".equals(prefix)) {
             //Format: redo
-//            command = new RedoCommand(receiver);
+            command = new RedoCommand(commandInvoker);
         } else {
             System.out.println("Unknown command");
         }
