@@ -1,4 +1,4 @@
-package com.lab1.command.io;
+package com.lab1.command.show.io;
 
 import com.lab1.command.Command;
 import com.lab1.model.HTML;

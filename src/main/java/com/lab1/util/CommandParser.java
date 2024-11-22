@@ -3,10 +3,10 @@ package com.lab1.util;
 
 import com.lab1.command.*;
 import com.lab1.command.edit.*;
-import com.lab1.command.io.InitCommand;
-import com.lab1.command.io.ReadCommand;
-import com.lab1.command.io.SaveCommand;
-import com.lab1.command.io.SpellCheckCommand;
+import com.lab1.command.show.io.InitCommand;
+import com.lab1.command.show.io.ReadCommand;
+import com.lab1.command.show.io.SaveCommand;
+import com.lab1.command.show.io.SpellCheckCommand;
 import com.lab1.command.show.PrintIndentCommand;
 import com.lab1.command.show.PrintTreeCommand;
 import com.lab1.model.HTML;
