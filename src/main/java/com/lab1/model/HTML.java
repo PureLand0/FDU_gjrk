@@ -15,10 +15,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * 是HTML文档类
@@ -28,13 +25,12 @@ public class HTML {
     //根节点
     private HTMLTag root;
     // Map存储id-Tag 用于查找
-    private Map<String, HTMLTag> map;
+    private Map<String, HTMLTag> map=new HashMap<>();;
     private Viewer viewer;
 
 
     public HTML(HTMLTag root) {
         this.root = root;
-        map = new HashMap<>();
     }
 
     public HTML() {
@@ -66,7 +62,7 @@ public class HTML {
                 newTag = new HTMLLeafTag(tagName, idValue, textContent, null, false);
             } else {
                 //新加的是枝干
-                newTag = new HTMLCompositeTag(tagName, idValue, textContent, null, null, null, false);
+                newTag = new HTMLCompositeTag(tagName, idValue, textContent, null,  null, false);
             }
             //真正的插入
             insertLocationTag.addUpdate(newTag);
@@ -104,7 +100,7 @@ public class HTML {
                 newTag = new HTMLLeafTag(tagName, idValue, textContent, parentTag, false);
             } else {
                 //composite
-                newTag = new HTMLCompositeTag(tagName, idValue, textContent, parentTag, null, null, false);
+                newTag = new HTMLCompositeTag(tagName, idValue, textContent, parentTag,  null, false);
             }
             map.put(idValue, newTag);
             HTMLCompositeTag parentCompositeTag = (HTMLCompositeTag) parentTag;
@@ -298,15 +294,15 @@ public class HTML {
     /**
      * 11. 初始化编辑器
      */
-    public void init() {
-        try{
-//            read("../../../resources/HTMLTemplate.html");
-            read("E:\\FDU\\gjrk_lab1\\src\\main\\resources\\HTMLTemplate.html");
-
-        }catch (Exception e) {
-
-        }
-    }
+//    public void init() {
+//        try{
+////            read("../../../resources/HTMLTemplate.html");
+//            read("E:\\FDU\\gjrk_lab1\\src\\main\\resources\\HTMLTemplate.html");
+//
+//        }catch (Exception e) {
+//
+//        }
+//    }
 
 
     /**
@@ -325,6 +321,8 @@ public class HTML {
         }
         map.put(tag.getId(), tag);  // 将标签添加到 map 中
     }
-
+//    public void addRoot(HTMLTag tag) throws IllegalArgumentException {
+//        map.put(tag.getId(), tag);  // 将标签添加到 map 中
+//    }
 
 }

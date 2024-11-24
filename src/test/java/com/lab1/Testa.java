@@ -4,7 +4,8 @@ import com.lab1.model.HTML;
 import com.lab1.model.HTMLCompositeTag;
 import com.lab1.model.HTMLLeafTag;
 import com.lab1.util.HTMLParser;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
+
 
 import java.io.IOException;
 
