@@ -25,7 +25,7 @@ public class HTML {
     //根节点
     private HTMLTag root;
     // Map存储id-Tag 用于查找
-    private Map<String, HTMLTag> map=new HashMap<>();;
+    private Map<String, HTMLTag> map = new HashMap<>();
     private Viewer viewer;
 
 
@@ -62,7 +62,7 @@ public class HTML {
                 newTag = new HTMLLeafTag(tagName, idValue, textContent, null, false);
             } else {
                 //新加的是枝干
-                newTag = new HTMLCompositeTag(tagName, idValue, textContent, null,  null, false);
+                newTag = new HTMLCompositeTag(tagName, idValue, textContent, null, null, false);
             }
             //真正的插入
             insertLocationTag.addUpdate(newTag);
@@ -88,7 +88,7 @@ public class HTML {
         if (map.containsKey(idValue)) {
             throw new IllegalArgumentException("ID重复");
         }
-        //
+
         HTMLTag parentTag = findTagById(parentElement);
         if (parentTag != null) {
             if (!TagEnum.isCompositeTag(parentTag.getName())) {
@@ -100,7 +100,7 @@ public class HTML {
                 newTag = new HTMLLeafTag(tagName, idValue, textContent, parentTag, false);
             } else {
                 //composite
-                newTag = new HTMLCompositeTag(tagName, idValue, textContent, parentTag,  null, false);
+                newTag = new HTMLCompositeTag(tagName, idValue, textContent, parentTag, null, false);
             }
             map.put(idValue, newTag);
             HTMLCompositeTag parentCompositeTag = (HTMLCompositeTag) parentTag;
@@ -108,6 +108,11 @@ public class HTML {
         } else {
             System.out.println("找不到你所要插入的位置");
         }
+    }
+    public void append(HTMLTag htmlTag, HTMLTag parent) {
+        htmlTag.setDeleted(false);
+        map.put(htmlTag.getId(),htmlTag);
+        ((HTMLCompositeTag)parent).getChildren().add(htmlTag);
     }
 
 
@@ -124,14 +129,12 @@ public class HTML {
         if (!map.containsKey(oldId)) {
             throw new IllegalArgumentException("没有你要找的元素");
         }
-
         //根据oldId找到对应的tag
         HTMLTag originalTag = findTagById(oldId);
         originalTag.setId(newId);
         //更新map
         map.remove(oldId);
         map.put(newId, originalTag);
-
     }
 
 
@@ -147,7 +150,6 @@ public class HTML {
             throw new IllegalArgumentException("没有你要找的元素");
         }
         HTMLTag originalTag = findTagById(element);
-
         String oldText = originalTag.getText();
         originalTag.setText(newTextContent);
         return oldText;
@@ -155,7 +157,6 @@ public class HTML {
 
     /**
      * 5. delete 删除某元素
-     * TODO 1
      *
      * @param element 为要删除元素的 id
      */
@@ -168,6 +169,7 @@ public class HTML {
         originalTag.setDeleted(true);
         //更新状态，通知树中其他节点
         originalTag.deleteUpdate();
+
         return originalTag;
     }
 
@@ -291,18 +293,17 @@ public class HTML {
             e.printStackTrace();
         }
     }
+
     /**
      * 11. 初始化编辑器
      */
-//    public void init() {
-//        try{
-////            read("../../../resources/HTMLTemplate.html");
-//            read("E:\\FDU\\gjrk_lab1\\src\\main\\resources\\HTMLTemplate.html");
-//
-//        }catch (Exception e) {
-//
-//        }
-//    }
+    public void init() {
+        try {
+            read("src\\main\\resources\\HTMLTemplate.html");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 
     /**
@@ -321,8 +322,5 @@ public class HTML {
         }
         map.put(tag.getId(), tag);  // 将标签添加到 map 中
     }
-//    public void addRoot(HTMLTag tag) throws IllegalArgumentException {
-//        map.put(tag.getId(), tag);  // 将标签添加到 map 中
-//    }
 
 }

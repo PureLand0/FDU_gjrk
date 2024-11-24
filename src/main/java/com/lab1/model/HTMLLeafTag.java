@@ -100,13 +100,4 @@ public class HTMLLeafTag implements HTMLTag {
 
     }
 
-    @Override
-    public void deleteUndoUpdate() {
-        if(this.parent instanceof HTMLCompositeTag){
-            HTMLCompositeTag parentTag=(HTMLCompositeTag) this.parent;
-            parentTag.addChild(this);
-        }
-
-
-    }
 }
