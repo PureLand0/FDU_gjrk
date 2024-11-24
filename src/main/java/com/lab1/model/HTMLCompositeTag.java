@@ -12,7 +12,7 @@ import java.util.List;
  */
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
+
 public class HTMLCompositeTag implements HTMLTag {
 
     private String name;
@@ -24,7 +24,7 @@ public class HTMLCompositeTag implements HTMLTag {
     private HTMLTag parent;
 
 
-    private List<String> childrenId = new ArrayList<>();
+    //private List<String> childrenId = new ArrayList<>();
 
     private List<HTMLTag> children = new ArrayList<>();
 
