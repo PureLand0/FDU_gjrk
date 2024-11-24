@@ -13,7 +13,7 @@ public class InitCommand implements Command {
 
     @Override
     public void execute() {
-//        html.init();
-    } //TODO:
+        html.init();
+    }
 
 }

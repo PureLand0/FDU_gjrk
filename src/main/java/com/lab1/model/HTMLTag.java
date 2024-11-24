@@ -51,5 +51,4 @@ public interface HTMLTag {
      */
     public void deleteUpdate();
 
-    public void deleteUndoUpdate();
 }

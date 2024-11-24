@@ -1,9 +1,6 @@
 package com.lab1.util;
 
-import com.lab1.model.HTML;
-import com.lab1.model.HTMLCompositeTag;
-import com.lab1.model.HTMLLeafTag;
-import com.lab1.model.HTMLTag;
+import com.lab1.model.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -57,6 +54,19 @@ public class HTMLParser {
 //
 //            elements.remove(0);
 //        }
+        HTMLTag root = html.getRoot();
+        HTMLCompositeTag root1 = (HTMLCompositeTag)root;
+        List<HTMLTag> children = root1.getChildren();
+        HTMLTag head = children.get(0);
+        HTMLTag body = children.get(1);
+
+        HTMLCompositeTag arr = (HTMLCompositeTag)head;
+        List<HTMLTag> children1 = arr.getChildren();
+        HTMLTag title = children1.get(0);
+        head.setParent(root);
+        body.setParent(root);
+        title.setParent(head);
+
         return html;
     }
 
@@ -99,10 +109,15 @@ public class HTMLParser {
         String id = getId(element);
         String text = element.ownText();
 
-        int childrenSize = element.childrenSize();
-        if (childrenSize == 0) {    //HTMLLeafTag
+//        int childrenSize = element.childrenSize();
+//        if (childrenSize == 0) {    //HTMLLeafTag
+//            htmlTag = new HTMLLeafTag(tagName, id, text);
+//        } else {                   //HTMLCompositeTag
+//            htmlTag = new HTMLCompositeTag(tagName, id, text);
+//        }
+        if(TagEnum.isLeafTag(element.tagName())) {//HTMLLeafTag
             htmlTag = new HTMLLeafTag(tagName, id, text);
-        } else {                   //HTMLCompositeTag
+        }else {//HTMLCompositeTag
             htmlTag = new HTMLCompositeTag(tagName, id, text);
         }
         return htmlTag;

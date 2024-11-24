@@ -20,9 +20,9 @@ public class DeleteCommand implements CanUndoCommand {
     }
 
     @Override
-    public void undo() {    //TODO: 需要判断是否为根节点
+    public void undo() {
         try {
-            html.append(deletedTag.getName(),deletedTag.getId(),deletedTag.getParent().getId(),deletedTag.getText());
+            html.append(deletedTag,deletedTag.getParent());
         }catch (Exception e){
             e.printStackTrace();
         }

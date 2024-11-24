@@ -1,6 +1,5 @@
 package com.lab1.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -139,25 +138,13 @@ public class HTMLCompositeTag implements HTMLTag {
 
     @Override
     public void deleteUpdate() {
-        for(HTMLTag child : children){
-            child.setDeleted(true);
-        }
         //父节点删除
+        this.setDeleted(true);
         if(this.parent instanceof HTMLCompositeTag){
-            HTMLCompositeTag parentTag=(HTMLCompositeTag) this.parent;
+            HTMLCompositeTag parentTag = (HTMLCompositeTag) this.parent;
             parentTag.removeChild(this);
         }
     }
 
-    @Override
-    public void deleteUndoUpdate() {
-        for(HTMLTag child : children){
-            child.setDeleted(true);
-        }
-        if(this.parent instanceof HTMLCompositeTag){
-            HTMLCompositeTag parentTag=(HTMLCompositeTag) this.parent;
-            parentTag.addChild(this);
-        }
 
-    }
 }
