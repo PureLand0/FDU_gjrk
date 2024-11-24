@@ -49,7 +49,24 @@ public class Testa {
     public void testInit() throws IOException {
 //        HTML html = new HTML();
 //        html.read("E:\\FDU\\gjrk_lab1\\src\\main\\resources\\TestTemplate.html");
-        HTML html= HTMLParser.parseHTML("src\\main\\resources\\HTMLTemplate.html");
+        HTML html= HTMLParser.parseHTML("src/main/resources/HTMLTemplate.html");
         html.printTree();
+    }
+
+    @Test
+    public void test2() {
+        HTMLCompositeTag html = new HTMLCompositeTag("html", "html", "", null, null, false);
+        HTMLCompositeTag head = new HTMLCompositeTag("head", "head", "", null, null, false);
+        HTMLCompositeTag body = new HTMLCompositeTag("body", "body", "", null, null, false);
+
+        HTMLLeafTag title = new HTMLLeafTag("title", "title", "my webpage", null, false);
+        HTMLCompositeTag h1 = new HTMLCompositeTag("h1", "h1", "welcom", null, null, false);
+        HTMLCompositeTag list = new HTMLCompositeTag("ul", "list", "list!!!", null, null, false);
+        HTMLLeafTag i1 = new HTMLLeafTag("li", "i1", "i1", null, false);
+        HTMLLeafTag i2 = new HTMLLeafTag("li", "i2", "i2", null, false);
+        HTMLLeafTag i3 = new HTMLLeafTag("li", "i3", "i3", null, false);
+
+
+
     }
 }
