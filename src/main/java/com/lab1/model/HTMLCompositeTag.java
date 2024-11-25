@@ -63,13 +63,24 @@ public class HTMLCompositeTag implements HTMLTag {
     public void removeChild(HTMLTag child){
         this.children.remove(child);
     }
-
+    public int getChildrenSize(){
+        return children.size();
+    }
 
     public HTMLCompositeTag(String name,String id, String text) {
         this.name=name;
         this.id=id;
         this.text=text;
     }
+    public HTMLTag getNextChild(HTMLTag htmlTag){
+        for (int i = 0; i < children.size()-1; i++) {
+            if(children.get(i).equals(htmlTag)){
+                return children.get(i+1);//返回下一个孩子
+            }
+        }
+        return null;//代表没有下一个孩子
+    }
+
 
     @Override
     public String print(String indent, boolean isLastChild, boolean isRoot) {
@@ -143,6 +154,32 @@ public class HTMLCompositeTag implements HTMLTag {
         if(this.parent instanceof HTMLCompositeTag){
             HTMLCompositeTag parentTag = (HTMLCompositeTag) this.parent;
             parentTag.removeChild(this);
+            System.out.println("parentTag = " + parentTag);
+        }
+    }
+
+    @Override
+    public String toString() {
+
+        if(parent==null){
+            return "HTMLCompositeTag{" +
+                    "name='" + name + '\'' +
+                    ", id='" + id + '\'' +
+                    ", text='" + text + '\'' +
+                    ", parentID=" + " " +
+                    ", childrenSize=" + children.size() +
+                    ", isDeleted=" + isDeleted +
+                    '}';
+        }
+        else {
+            return "HTMLCompositeTag{" +
+                    "name='" + name + '\'' +
+                    ", id='" + id + '\'' +
+                    ", text='" + text + '\'' +
+                    ", parentID=" + parent.getId() +
+                    ", childrenSize=" + children.size() +
+                    ", isDeleted=" + isDeleted +
+                    '}';
         }
     }
 

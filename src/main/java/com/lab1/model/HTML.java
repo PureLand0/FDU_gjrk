@@ -160,17 +160,20 @@ public class HTML {
      *
      * @param element 为要删除元素的 id
      */
-    public HTMLTag delete(String element) {
+    public List<HTMLTag> delete(String element) {
+        //返回arrayList<HTMLTag> 第一个存删除的Tag；如果arraylist的size()!=1,那么第二个位置存删除Tag的后一个Tag
+        List<HTMLTag>list=new ArrayList<>();
         if (!map.containsKey(element)) {
             throw new IllegalArgumentException("没有你要找的元素");
         }
-        HTMLTag originalTag = findTagById(element);
-        map.remove(element);
-        originalTag.setDeleted(true);
-        //更新状态，通知树中其他节点
-        originalTag.deleteUpdate();
+        list = findTagById(element,list);
 
-        return originalTag;
+        map.remove(element);
+        list.get(0).setDeleted(true);
+        //更新状态，通知树中其他节点
+        list.get(0).deleteUpdate();
+
+        return list;
     }
 
     /**
@@ -315,6 +318,27 @@ public class HTML {
     public HTMLTag findTagById(String id) {
         return map.get(id);
     }
+    public List<HTMLTag> findTagById(String id,List<HTMLTag> list) {
+        HTMLTag targetTag=map.get(id);
+//        System.out.println("targetTag = " + targetTag);
+//        System.out.println("----------------------");
+        if(targetTag==root||targetTag.getParent().getChildrenSize()<=1){ //该节点没有其他的兄弟姐妹
+
+            list.add(targetTag);
+//            System.out.println("list1 = " + list);
+            return list;
+        }
+        else{ //该节点有其他的兄弟姐妹
+            list.add(targetTag);
+            HTMLTag nextChild = ((HTMLCompositeTag) targetTag.getParent()).getNextChild(targetTag);
+            if(nextChild!=null){
+                list.add(nextChild);
+            }
+//            System.out.println("list2 = " + list);
+            return list;
+        }
+
+    }
 
     public void addTag(HTMLTag tag) throws IllegalArgumentException {
         if (map.containsKey(tag.getId())) {
@@ -323,4 +347,10 @@ public class HTML {
         map.put(tag.getId(), tag);  // 将标签添加到 map 中
     }
 
+    @Override
+    public String toString() {
+        return "HTML{" +
+                "map=" + map +
+                '}';
+    }
 }
