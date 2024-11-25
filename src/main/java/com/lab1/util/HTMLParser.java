@@ -24,48 +24,19 @@ public class HTMLParser {
         elementStack.push(element);
         dfs(elementStack,html,HasSetRoot);
 
-//        while(elements.size()!=0){//层序遍历
+//        HTMLTag root = html.getRoot();
+//        HTMLCompositeTag root1 = (HTMLCompositeTag)root;
+//        List<HTMLTag> children = root1.getChildren();
+//        HTMLTag head = children.get(0);
+//        HTMLTag body = children.get(1);
 //
-//            Element element=elements.first();
-//            HTMLTag htmlTag=HTMLTagAdapter(element);
-//
-//            if(!HasSetRoot){   //设置html根节点
-//                html.setRoot(htmlTag);
-//                HasSetRoot=true;
-//                //html.addRoot(htmlTag);
-//            }
-//            else {             //设置父节点
-//                htmlTag.attach(html.findTagById(getId(element.parent())));
-//            }
-//
-//            //设置孩子节点
-//            List<String> childrenId=new ArrayList<>();
-//            if(element.childrenSize()!=0){ //CompositeTag
-//                Elements children = element.children();
-//                for (Element child : children) {
-//                    elements.add(child);
-//
-//                    childrenId.add(getId(child));
-//                    ((HTMLCompositeTag) htmlTag).setChildrenId(childrenId);
-//                }
-//            }
-//
-//            html.addTag(htmlTag);
-//
-//            elements.remove(0);
-//        }
-        HTMLTag root = html.getRoot();
-        HTMLCompositeTag root1 = (HTMLCompositeTag)root;
-        List<HTMLTag> children = root1.getChildren();
-        HTMLTag head = children.get(0);
-        HTMLTag body = children.get(1);
+//        HTMLCompositeTag arr = (HTMLCompositeTag)head;
+//        List<HTMLTag> children1 = arr.getChildren();
+//        HTMLTag title = children1.get(0);
+//        head.setParent(root);
+//        body.setParent(root);
+//        title.setParent(head);
 
-        HTMLCompositeTag arr = (HTMLCompositeTag)head;
-        List<HTMLTag> children1 = arr.getChildren();
-        HTMLTag title = children1.get(0);
-        head.setParent(root);
-        body.setParent(root);
-        title.setParent(head);
 
         return html;
     }
@@ -81,18 +52,17 @@ public class HTMLParser {
             for (Element child : children) {
                 elementStack.push(child);
                 HTMLTag childHTMLTag=dfs(elementStack, html,true);
+                childHTMLTag.attach(htmlTag);
                 childlist.add(childHTMLTag);
             }
             ((HTMLCompositeTag) htmlTag).setChildren(childlist);
         }
+        html.addTag(htmlTag);
 
         if (!HasSetRoot) {   //是根节点
             html.setRoot(htmlTag);
         }
-        else{//不是根节点 设置父节点
-            htmlTag.attach(html.findTagById(getId(element.parent())));
-        }
-        html.addTag(htmlTag);
+
         return htmlTag;
     }
 

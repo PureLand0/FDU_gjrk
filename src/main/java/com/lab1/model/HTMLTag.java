@@ -1,5 +1,8 @@
 package com.lab1.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * HTML标签的接口
  */
@@ -50,5 +53,7 @@ public interface HTMLTag {
      * 要删除当前结点
      */
     public void deleteUpdate();
+
+    public int getChildrenSize();
 
 }
