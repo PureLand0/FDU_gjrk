@@ -16,7 +16,7 @@ public class ReadCommand implements Command {
     @Override
     public void execute() {
         html.read(url);
-        System.out.println("html = " + html);
+//        System.out.println("html = " + html);
     }
 }
 

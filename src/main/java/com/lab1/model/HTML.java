@@ -71,6 +71,18 @@ public class HTML {
             System.out.println("找不到你所要插入的位置");
         }
     }
+    public void insert(HTMLTag htmlTag, HTMLTag nextTag) {
+        htmlTag.setDeleted(false);
+        map.put(htmlTag.getId(),htmlTag);
+        HTMLCompositeTag parent=(HTMLCompositeTag)nextTag.getParent();
+        List<HTMLTag> children = parent.getChildren();
+        for (int i = 0; i < children.size(); i++) {
+            if(children.get(i).equals(nextTag)) {
+                children.add(i, htmlTag);
+                break;
+            }
+        }
+    }
 
     /**
      * 2. append 在某元素内插入新元素

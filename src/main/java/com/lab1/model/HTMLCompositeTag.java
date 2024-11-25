@@ -154,7 +154,7 @@ public class HTMLCompositeTag implements HTMLTag {
         if(this.parent instanceof HTMLCompositeTag){
             HTMLCompositeTag parentTag = (HTMLCompositeTag) this.parent;
             parentTag.removeChild(this);
-            System.out.println("parentTag = " + parentTag);
+            //System.out.println("parentTag = " + parentTag);
         }
     }
 
