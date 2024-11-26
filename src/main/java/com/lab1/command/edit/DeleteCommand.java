@@ -4,10 +4,12 @@ import com.lab1.command.CanUndoCommand;
 import com.lab1.model.HTML;
 import com.lab1.model.HTMLTag;
 
+import java.util.List;
+
 public class DeleteCommand implements CanUndoCommand {
 
     private String id;//要删除的ID
-    private HTMLTag deletedTag;//删除的HTMLTag
+    private List<HTMLTag> deletedTag;//删除的HTMLTag
     private HTML html;
 
     public DeleteCommand(String id, HTML html){
@@ -22,7 +24,14 @@ public class DeleteCommand implements CanUndoCommand {
     @Override
     public void undo() {
         try {
-            html.append(deletedTag,deletedTag.getParent());
+            if(deletedTag.size()==1){//在删除的Tag之后还有兄弟Tag
+                html.append(deletedTag.get(0),deletedTag.get(0).getParent());
+            }
+            if(deletedTag.size()==2){//在删除的Tag后没有兄弟Tag
+                html.insert(deletedTag.get(0),deletedTag.get(1));
+                 //html.insert(deletedTag.get(0).getName(),deletedTag.get(0).getId(),deletedTag.get(1).getId(),deletedTag.get(0).getText());
+            }
+
         }catch (Exception e){
             e.printStackTrace();
         }
