@@ -86,7 +86,7 @@ public class CommandParser {
                 command = new PrintIndentCommand(Integer.parseInt(cmdStrings[1]), receiver);
             } else if (cmdStrings.length == 1) {
                 //每级缩进的空格数，默认为 2
-//                command = new PrintIndentCommand(Constant.DEFAULT_INDENT, receiver);
+                command = new PrintIndentCommand(2, receiver);
             }
         } else if ("print-tree".equals(prefix)) {
             //Format: print-tree
