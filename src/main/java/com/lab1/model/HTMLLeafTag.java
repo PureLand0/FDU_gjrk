@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 叶子标签，即里面不会再包含内容，比如 <br> <hr> <img>等
  */
@@ -49,7 +52,9 @@ public class HTMLLeafTag implements HTMLTag {
 
     }
 
-
+    public int getChildrenSize(){
+        return 0;
+    }
 
     @Override
     public String print(String indent, boolean isLastChild, boolean isRoot) {
@@ -100,4 +105,25 @@ public class HTMLLeafTag implements HTMLTag {
 
     }
 
+    @Override
+    public String toString() {
+        if(parent==null){
+            return "HTMLLeafTag{" +
+                    "name='" + name + '\'' +
+                    ", id='" + id + '\'' +
+                    ", text='" + text + '\'' +
+                    ", isDeleted=" + isDeleted +
+                    ",  parentID=" +" "+
+                    '}';
+        }
+        else {
+            return "HTMLLeafTag{" +
+                "name='" + name + '\'' +
+                ", id='" + id + '\'' +
+                ", text='" + text + '\'' +
+                ", isDeleted=" + isDeleted +
+                ",  parentID=" + parent.getId() +
+                '}';
+        }
+    }
 }
