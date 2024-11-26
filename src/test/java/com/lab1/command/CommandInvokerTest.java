@@ -10,7 +10,6 @@ public class CommandInvokerTest {
     private CommandInvoker commandInvoker = new CommandInvoker();
     private Command command;
     private HTML html = new HTML();
-    ;
 
     @BeforeEach
     void setUp() {
