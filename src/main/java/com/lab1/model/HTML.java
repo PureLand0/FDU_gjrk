@@ -71,13 +71,14 @@ public class HTML {
             throw new IllegalArgumentException("你插入的位置不存在");
         }
     }
+
     public void insert(HTMLTag htmlTag, HTMLTag nextTag) {
         htmlTag.setDeleted(false);
-        map.put(htmlTag.getId(),htmlTag);
-        HTMLCompositeTag parent=(HTMLCompositeTag)nextTag.getParent();
+        map.put(htmlTag.getId(), htmlTag);
+        HTMLCompositeTag parent = (HTMLCompositeTag) nextTag.getParent();
         List<HTMLTag> children = parent.getChildren();
         for (int i = 0; i < children.size(); i++) {
-            if(children.get(i).equals(nextTag)) {
+            if (children.get(i).equals(nextTag)) {
                 children.add(i, htmlTag);
                 break;
             }
@@ -118,13 +119,14 @@ public class HTML {
             HTMLCompositeTag parentCompositeTag = (HTMLCompositeTag) parentTag;
             parentCompositeTag.addChild(newTag);
         } else {
-            System.out.println("找不到你所要插入的位置");
+            throw new IllegalArgumentException("你插入的位置不存在");
         }
     }
+
     public void append(HTMLTag htmlTag, HTMLTag parent) {
         htmlTag.setDeleted(false);
-        map.put(htmlTag.getId(),htmlTag);
-        ((HTMLCompositeTag)parent).getChildren().add(htmlTag);
+        map.put(htmlTag.getId(), htmlTag);
+        ((HTMLCompositeTag) parent).getChildren().add(htmlTag);
     }
 
 
@@ -135,12 +137,13 @@ public class HTML {
      * @param newId 为新 id，注意 id 不能与其他元素重复
      */
     public void editId(String oldId, String newId) {
-        if (map.containsKey(newId)) {
-            throw new IllegalArgumentException("ID重复");
-        }
         if (!map.containsKey(oldId)) {
             throw new IllegalArgumentException("没有你要找的元素");
         }
+        if (map.containsKey(newId)) {
+            throw new IllegalArgumentException("ID重复");
+        }
+
         //根据oldId找到对应的tag
         HTMLTag originalTag = findTagById(oldId);
         originalTag.setId(newId);
@@ -174,17 +177,15 @@ public class HTML {
      */
     public List<HTMLTag> delete(String element) {
         //返回arrayList<HTMLTag> 第一个存删除的Tag；如果arraylist的size()!=1,那么第二个位置存删除Tag的后一个Tag
-        List<HTMLTag>list=new ArrayList<>();
+        List<HTMLTag> list = new ArrayList<>();
         if (!map.containsKey(element)) {
             throw new IllegalArgumentException("没有你要找的元素");
         }
-        list = findTagById(element,list);
-
+        list = findTagById(element, list);
         map.remove(element);
         list.get(0).setDeleted(true);
         //更新状态，通知树中其他节点
         list.get(0).deleteUpdate();
-
         return list;
     }
 
@@ -273,7 +274,7 @@ public class HTML {
             this.root = html.getRoot();
             this.map = html.getMap();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("请确认该地址是否存在文件");
         }
     }
 
@@ -282,9 +283,9 @@ public class HTML {
      * - filepath 为写入文件的路径名。
      * - 进行必要的异常检测，例如提供的路径名无法写入文件。
      */
-    public void save(String filePath) {
+    public String save(String filePath)  {
         if (this.root == null) {
-            System.out.println("没有HTML");
+            throw new RuntimeException("该html为空");
         }
         // 创建一个 UUID 作为文件名
         String fileName = UUID.randomUUID().toString() + ".html";
@@ -293,20 +294,23 @@ public class HTML {
         viewer = new IndentViewer(root);
         String res = new String(viewer.show());
         // 写入文件
-        try {
-            // 确保目录存在
-            Path path = Paths.get(filePath);
-            if (!Files.exists(path)) {
+        // 确保目录存在
+        Path path = Paths.get(filePath);
+        if (!Files.exists(path)) {
+            try {
                 Files.createDirectories(path); // 创建目录
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-            // 使用 BufferedWriter 写入文件
-            try (BufferedWriter bw = new BufferedWriter(new FileWriter(fullPath))) {
-                bw.write(res);
-            }
-            System.out.println("文件已保存至: " + fullPath); // 输出保存的文件路径
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+        // 使用 BufferedWriter 写入文件
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(fullPath))) {
+            bw.write(res);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println("文件已保存至: " + fullPath); // 输出保存的文件路径
+        return fullPath;
     }
 
     /**
@@ -330,17 +334,16 @@ public class HTML {
     public HTMLTag findTagById(String id) {
         return map.get(id);
     }
-    public List<HTMLTag> findTagById(String id,List<HTMLTag> list) {
-        HTMLTag targetTag=map.get(id);
-        if(targetTag==root||targetTag.getParent().getChildrenSize()<=1){ //该节点没有其他的兄弟姐妹
 
+    public List<HTMLTag> findTagById(String id, List<HTMLTag> list) {
+        HTMLTag targetTag = map.get(id);
+        if (targetTag == root || targetTag.getParent().getChildrenSize() <= 1) { //该节点没有其他的兄弟姐妹
             list.add(targetTag);
             return list;
-        }
-        else{ //该节点有其他的兄弟姐妹
+        } else { //该节点有其他的兄弟姐妹
             list.add(targetTag);
             HTMLTag nextChild = ((HTMLCompositeTag) targetTag.getParent()).getNextChild(targetTag);
-            if(nextChild!=null){
+            if (nextChild != null) {
                 list.add(nextChild);
             }
             return list;

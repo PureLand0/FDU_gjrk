@@ -23,8 +23,6 @@ public class HTMLCompositeTag implements HTMLTag {
     private HTMLTag parent;
 
 
-    //private List<String> childrenId = new ArrayList<>();
-
     private List<HTMLTag> children = new ArrayList<>();
 
     private boolean isDeleted;
@@ -154,7 +152,6 @@ public class HTMLCompositeTag implements HTMLTag {
         if(this.parent instanceof HTMLCompositeTag){
             HTMLCompositeTag parentTag = (HTMLCompositeTag) this.parent;
             parentTag.removeChild(this);
-            //System.out.println("parentTag = " + parentTag);
         }
     }
 
