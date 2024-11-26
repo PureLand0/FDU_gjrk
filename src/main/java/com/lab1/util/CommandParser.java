@@ -19,7 +19,7 @@ public class CommandParser {
      * InsertCommand, AppendCommand, EditIdCommand, EditTextCommand, DeleteCommand, PrintIndentCommand
      * PrintTreeCommand, SpellCheckCommand, ReadCommand, SaveCommand, InitCommand, UndoCommand, RedoCommand
      */
-    public static Command parse(String cmdStr, CommandInvoker commandInvoker, HTML receiver) { //TODO: zgn加了CommandInvoker
+    public static Command parse(String cmdStr, CommandInvoker commandInvoker, HTML receiver) {
         Command command = null;
         String[] cmdStrings = cmdStr.split("\\s+");
         String prefix = cmdStrings[0];
