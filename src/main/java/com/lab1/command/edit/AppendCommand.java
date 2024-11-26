@@ -20,7 +20,7 @@ public class AppendCommand implements CanUndoCommand { //将新元素插入到pa
         try {
             html.append(name, id, parentId, text);
         }catch (Exception e){
-            e.printStackTrace();
+            throw e;
         }
     }
 
