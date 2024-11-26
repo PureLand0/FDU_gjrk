@@ -68,7 +68,7 @@ public class HTML {
             insertLocationTag.addUpdate(newTag);
             map.put(idValue, newTag);
         } else {
-            System.out.println("找不到你所要插入的位置");
+            throw new IllegalArgumentException("你插入的位置不存在");
         }
     }
     public void insert(HTMLTag htmlTag, HTMLTag nextTag) {
@@ -332,12 +332,9 @@ public class HTML {
     }
     public List<HTMLTag> findTagById(String id,List<HTMLTag> list) {
         HTMLTag targetTag=map.get(id);
-//        System.out.println("targetTag = " + targetTag);
-//        System.out.println("----------------------");
         if(targetTag==root||targetTag.getParent().getChildrenSize()<=1){ //该节点没有其他的兄弟姐妹
 
             list.add(targetTag);
-//            System.out.println("list1 = " + list);
             return list;
         }
         else{ //该节点有其他的兄弟姐妹
@@ -346,7 +343,6 @@ public class HTML {
             if(nextChild!=null){
                 list.add(nextChild);
             }
-//            System.out.println("list2 = " + list);
             return list;
         }
 
