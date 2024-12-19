@@ -4,9 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * 叶子标签，即里面不会再包含内容，比如 <br> <hr> <img>等
  */
@@ -34,7 +31,6 @@ public class HTMLLeafTag implements HTMLTag {
      * 是否删除的标签值
      */
 
-
     private boolean isDeleted;
 
     public void setDeleted(boolean bool) {
@@ -49,13 +45,19 @@ public class HTMLLeafTag implements HTMLTag {
         this.name=name;
         this.id=id;
         this.text=text;
-
     }
 
     public int getChildrenSize(){
         return 0;
     }
 
+    /**
+     * 打印当前叶子节点的树形结构
+     * @param indent 这个节点前面的前缀
+     * @param isLastChild 是不是当前范围最后一个结点
+     * @param isRoot 是不是根结点
+     * @return
+     */
     @Override
     public String print(String indent, boolean isLastChild, boolean isRoot) {
         StringBuilder result = new StringBuilder();
@@ -65,11 +67,8 @@ public class HTMLLeafTag implements HTMLTag {
         } else if (!isRoot & !isLastChild) {
             result.append("├── ");
         }
-
         result.append(name);
-
         result.append("#").append(id);
-
         if (!text.isEmpty()) {
             if (!isLastChild) {
                 result.append("\n").append(indent).append("│   └── ").append(text).append("\n");

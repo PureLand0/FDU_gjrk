@@ -107,6 +107,4 @@ public class TagEnum {
         if(compositeList.contains(s))return true;
         return false;
     }
-
-
 }

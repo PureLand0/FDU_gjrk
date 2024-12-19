@@ -17,13 +17,13 @@ public class HTMLAppendTest {
     @Test
     void testInsertValidLeafTag() {
         // HTMLLeafTag是一个叶子标签类
-        html.append("img", "img1", "footer", "");
+        html.append("img", "img1", "footer", "a");
 
         // 验证是否插入成功
         assertTrue(html.getMap().containsKey("img1"));
         HTMLTag insertedTag = html.getMap().get("img1");
         assertEquals("img", insertedTag.getName());
-        assertEquals("", insertedTag.getText());
+        assertEquals("a", insertedTag.getText());
     }
 
     @Test

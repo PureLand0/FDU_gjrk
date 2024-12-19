@@ -1,8 +1,12 @@
 package com.lab1.model;
 
-import com.lab1.print.IndentViewer;
-import com.lab1.print.TreeViewer;
-import com.lab1.print.Viewer;
+import com.lab1.print.*;
+import com.lab1.print.impl.DirTreeProvider;
+import com.lab1.print.impl.FileNameProvider;
+import com.lab1.print.impl.HTMLTreeProvider;
+import com.lab1.print.impl.TagNameProvider;
+import com.lab1.print.provider.NameProvider;
+import com.lab1.print.provider.TreeContentProvider;
 import com.lab1.util.HTMLParser;
 import lombok.Data;
 import org.languagetool.JLanguageTool;
@@ -10,6 +14,7 @@ import org.languagetool.Languages;
 import org.languagetool.rules.RuleMatch;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -200,6 +205,7 @@ public class HTML {
         }
         viewer = new IndentViewer(root, indent);
         System.out.println(new String(viewer.show()));
+
     }
 
     public void printIndent() {
@@ -219,6 +225,11 @@ public class HTML {
         }
         viewer = new TreeViewer(root);
         System.out.println(new String(viewer.show()));
+//        TreeContentProvider<HTMLTag> cp = new HTMLTreeProvider(root);
+//        NameProvider<HTMLTag> nameProvider = new TagNameProvider();
+//        StringBuilder show = new DIRTreeViewer<HTMLTag>(cp, nameProvider).show();
+//        System.out.println(show.toString());
+
     }
 
     /**
@@ -323,6 +334,27 @@ public class HTML {
             e.printStackTrace();
         }
     }
+
+    /**
+     * 目录结构——indent
+     */
+    public void dirIndent() {
+        TreeContentProvider<File> cp = new DirTreeProvider(new File("./src/main/java"));
+        NameProvider<File> nameProvider = new FileNameProvider();
+        StringBuilder show = new DIRIndentViewer<File>(cp, nameProvider).show();
+        System.out.println(show.toString());
+    }
+
+    /**
+     * 目录结构——tree
+     */
+    public void dirTree() {
+        TreeContentProvider<File> cp = new DirTreeProvider(new File("./src/main/java"));
+        NameProvider<File> nameProvider = new FileNameProvider();
+        StringBuilder show = new DIRTreeViewer<File>(cp, nameProvider).show();
+        System.out.println(show.toString());
+    }
+
 
 
     /**

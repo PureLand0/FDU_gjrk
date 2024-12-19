@@ -13,6 +13,7 @@ public class App {
         System.setOut(new PrintStream(System.out, true, "UTF-8"));
         // 设置全局异常处理器
         Thread.setDefaultUncaughtExceptionHandler(new GlobalExceptionHandle());
+
         HTML html = new HTML();
         CommandInvoker commandInvoker = new CommandInvoker();
         while (true) {

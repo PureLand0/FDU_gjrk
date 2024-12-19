@@ -33,10 +33,14 @@ public class HTMLCompositeTag implements HTMLTag {
         this.text = text;
         this.parent = parent;
         if(children == null) {
-            this.children = new ArrayList<>();
+            this.children = children;
         }
-
         this.isDeleted = isDeleted;
+    }
+    public HTMLCompositeTag(String name,String id, String text) {
+        this.name=name;
+        this.id=id;
+        this.text=text;
     }
 
     public void setDeleted(boolean bool) {
@@ -65,11 +69,8 @@ public class HTMLCompositeTag implements HTMLTag {
         return children.size();
     }
 
-    public HTMLCompositeTag(String name,String id, String text) {
-        this.name=name;
-        this.id=id;
-        this.text=text;
-    }
+
+
     public HTMLTag getNextChild(HTMLTag htmlTag){
         for (int i = 0; i < children.size()-1; i++) {
             if(children.get(i).equals(htmlTag)){
@@ -80,6 +81,13 @@ public class HTMLCompositeTag implements HTMLTag {
     }
 
 
+    /**
+     * 打印当前枝干节点的树形结构
+     * @param indent 这个节点前面的前缀
+     * @param isLastChild 是不是当前范围最后一个结点
+     * @param isRoot 是不是根结点
+     * @return
+     */
     @Override
     public String print(String indent, boolean isLastChild, boolean isRoot) {
         StringBuilder result = new StringBuilder();
@@ -90,7 +98,6 @@ public class HTMLCompositeTag implements HTMLTag {
             result.append("├── ");
         }
         result.append(name);
-
         result.append("#").append(id);
 
         //孩子的前缀

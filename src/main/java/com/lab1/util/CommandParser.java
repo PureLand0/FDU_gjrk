@@ -3,6 +3,8 @@ package com.lab1.util;
 
 import com.lab1.command.*;
 import com.lab1.command.edit.*;
+import com.lab1.command.show.DirIndentCommand;
+import com.lab1.command.show.DirTreeCommand;
 import com.lab1.command.show.io.InitCommand;
 import com.lab1.command.show.io.ReadCommand;
 import com.lab1.command.show.io.SaveCommand;
@@ -23,6 +25,7 @@ public class CommandParser {
         Command command = null;
         String[] cmdStrings = cmdStr.split("\\s+");
         String prefix = cmdStrings[0];
+
         if ("insert".equals(prefix)) {
             //Format: insert tagName idValue insertLocation [textContent]
             if (cmdStrings.length >= 5) {
@@ -117,9 +120,16 @@ public class CommandParser {
         } else if ("redo".equals(prefix)) {
             //Format: redo
             command = new RedoCommand(commandInvoker);
-        } else {
+        } else if("dir-indent".equals(prefix)){
+            command = new DirIndentCommand(2, receiver);
+
+        }else if("dir-tree".equals(prefix)){
+            command = new DirTreeCommand( receiver);
+
+        }else {
             System.out.println("Unknown command");
         }
+
         return command;
     }
 }

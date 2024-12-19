@@ -35,7 +35,6 @@ public class IndentViewer implements Viewer{
         sb.append(printIdent(indent));
         sb.append("<").append(node.getName()).append(" id=\"").append(node.getId()).append("\"").append(">");
         if (node instanceof HTMLLeafTag || (node instanceof HTMLCompositeTag && ((HTMLCompositeTag) node).getChildren().size() == 0)) {
-
             sb.append(node.getText()).append("<").append("/").append(node.getName()).append(">").append("\n");
         } else {
             sb.append("\n");
@@ -43,7 +42,6 @@ public class IndentViewer implements Viewer{
             }else {
                 sb.append(printIdent(indent+1)).append(node.getText()).append("\n");
             }
-
             HTMLCompositeTag node1 = (HTMLCompositeTag) node;
             List<HTMLTag> nodes = node1.getChildren();
             if (nodes != null) {
@@ -68,5 +66,4 @@ public class IndentViewer implements Viewer{
         sb.append("<").append("/").append(root.getName()).append(">");
         return sb;
     }
-
 }

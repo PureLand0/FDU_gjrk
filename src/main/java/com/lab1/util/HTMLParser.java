@@ -36,8 +36,6 @@ public class HTMLParser {
 //        head.setParent(root);
 //        body.setParent(root);
 //        title.setParent(head);
-
-
         return html;
     }
 
